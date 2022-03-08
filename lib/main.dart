@@ -1,19 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 List newsList = [{'title' : 'Amazon forest', 'desc' : 'Hello welcome to news+'},
 {'title' : 'War', 'desc' : 'Hello welcome to news2+'},
 {'title' : 'News3', 'desc' : 'Hello welcome to news3+'}
 ];
 
-List items = [];
-
-void updateItems() {
-  items.addAll(newsList.map((element) =>
-  element['title']).toList());
-}
 void main() {
   runApp(const MyApp());
 }
@@ -45,10 +38,12 @@ class _HomeState extends State<Home> {
 
 int count = 0;
 bool fav = false;
+List serachitems =[];
 
 @override
 void initState() {
-  updateItems();
+  serachitems.addAll(newsList.map((element) =>
+  element['title']).toList());
   super.initState();
 }
 
@@ -65,14 +60,14 @@ void initState() {
           }
         });
         setState(() {
-          items.clear();
-          items.addAll(dummyListData);
+          serachitems.clear();
+          serachitems.addAll(dummyListData);
         });
         return;
       } else {
         setState(() {
-          items.clear();
-          items.addAll(newsList);
+          serachitems.clear();
+          serachitems.addAll(newsList);
         });
       }
     }
@@ -85,7 +80,6 @@ setState(() {
   }
   @override
   Widget build(BuildContext context) {
-  updateItems();
     return Scaffold(
       appBar: AppBar(centerTitle: true,
       title: Text('News'),),
@@ -206,7 +200,6 @@ class _AddNewsState extends State<AddNews> {
           TextButton(onPressed: (){
             Navigator.of(context).pop(context);
             newsList.add({'title': _title.text, 'desc': _desc.text});
-            updateItems();
 
           }, child: Text('Submit'))
         ],
