@@ -6,6 +6,12 @@ List newsList = [{'title' : 'Amazon forest', 'desc' : 'Hello welcome to news+'},
 {'title' : 'War', 'desc' : 'Hello welcome to news2+'},
 {'title' : 'News3', 'desc' : 'Hello welcome to news3+'}
 ];
+List searchItems =[];
+
+void updateItems(){
+  searchItems.addAll(newsList.map((element) =>
+  element['title']).toList());
+}
 
 void main() {
   runApp(const MyApp());
@@ -38,12 +44,10 @@ class _HomeState extends State<Home> {
 
 int count = 0;
 bool fav = false;
-List serachitems =[];
 
 @override
 void initState() {
-  serachitems.addAll(newsList.map((element) =>
-  element['title']).toList());
+  updateItems();
   super.initState();
 }
 
@@ -60,14 +64,14 @@ void initState() {
           }
         });
         setState(() {
-          serachitems.clear();
-          serachitems.addAll(dummyListData);
+          searchItems.clear();
+          searchItems.addAll(dummyListData);
         });
         return;
       } else {
         setState(() {
-          serachitems.clear();
-          serachitems.addAll(newsList);
+          searchItems.clear();
+          searchItems.addAll(newsList);
         });
       }
     }
@@ -80,6 +84,11 @@ setState(() {
   }
   @override
   Widget build(BuildContext context) {
+  if(_search.text.isEmpty && newsList.length != searchItems.length){
+    setState(() {
+      updateItems();
+    });
+  }
     return Scaffold(
       appBar: AppBar(centerTitle: true,
       title: Text('News'),),
@@ -100,7 +109,7 @@ setState(() {
           ),
           Expanded(
             child: ListView.builder(
-          itemCount: newsList.length,
+          itemCount: searchItems.length,
           shrinkWrap: true,
           itemBuilder: (context, index){
     return Card(
@@ -199,7 +208,9 @@ class _AddNewsState extends State<AddNews> {
 
           TextButton(onPressed: (){
             Navigator.of(context).pop(context);
-            newsList.add({'title': _title.text, 'desc': _desc.text});
+            setState(() {
+              newsList.add({'title': _title.text, 'desc': _desc.text});
+            });
 
           }, child: Text('Submit'))
         ],
