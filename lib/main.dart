@@ -3,11 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-List newsList = [{'title' : 'News1', 'desc' : 'Hello welcome to news+'},
-{'title' : 'News2', 'desc' : 'Hello welcome to news2+'},
+List newsList = [{'title' : 'Amazon forest', 'desc' : 'Hello welcome to news+'},
+{'title' : 'War', 'desc' : 'Hello welcome to news2+'},
 {'title' : 'News3', 'desc' : 'Hello welcome to news3+'}
 ];
 
+List items = [];
+
+void updateItems() {
+  items.addAll(newsList.map((element) =>
+  element['title']).toList());
+}
 void main() {
   runApp(const MyApp());
 }
@@ -36,16 +42,21 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   TextEditingController _search = TextEditingController();
-  List items = [];
 
 int count = 0;
 bool fav = false;
 
+@override
+void initState() {
+  updateItems();
+  super.initState();
+}
+
     void filterSearchResults(String query) {
       List dummySearchList = [];
-      newsList.map((element) {
-        dummySearchList =
-        element['title'];});
+      dummySearchList =
+      newsList.map((element) =>
+        element['title']).toList();
       if(query.isNotEmpty) {
         List<String> dummyListData = [];
         dummySearchList.forEach((item) {
@@ -74,6 +85,7 @@ setState(() {
   }
   @override
   Widget build(BuildContext context) {
+  updateItems();
     return Scaffold(
       appBar: AppBar(centerTitle: true,
       title: Text('News'),),
@@ -194,6 +206,7 @@ class _AddNewsState extends State<AddNews> {
           TextButton(onPressed: (){
             Navigator.of(context).pop(context);
             newsList.add({'title': _title.text, 'desc': _desc.text});
+            updateItems();
 
           }, child: Text('Submit'))
         ],
